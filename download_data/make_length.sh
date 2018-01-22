@@ -1,5 +1,5 @@
 #!/bin/bash
-
+REF=$1
 REF_PATH=$REF/benchmarking/human_transcriptome
 TRNA_FA=$REF_PATH/tRNA.fa
 TRANSCRIPTS_BED=$REF_PATH/genes.bed

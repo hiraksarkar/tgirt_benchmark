@@ -56,7 +56,7 @@ with open('SraRunTable.txt','r') as table:
             current = sample_dict[samplename]
             sample_id =  samplename+'-'+str(current)
             url = prepareURL(run_number)
-            srr_dir = '/'.join([raw_data_path,run_number])
+            #srr_dir = '/'.join([raw_data_path,run_number])
             #render commands
             '''
             download_command = 'fastq-dump --split-3 --gzip --outdir %s %s ' %(raw_data_path, run_number)
@@ -65,6 +65,6 @@ with open('SraRunTable.txt','r') as table:
             rename_read2_command = 'mv %s/%s_2.fastq.gz %s/%s_R2_001.fastq.gz' \
                     %(raw_data_path,run_number, raw_data_path, sample_id)
             '''
-            print("{} -P 33001 -QT -l 1000m -i {} {} {}".format(aspera_binary, aspera_key, url, srr_dir))
-            os.system("{} -P 33001 -QT -l 1000m -i {} {} {}".format(aspera_binary, aspera_key, url, srr_dir))
+            print("{} -P 33001 -QT -l 1000m -i {} {} {}".format(aspera_binary, aspera_key, url, raw_data_path))
+            os.system("{} -P 33001 -QT -l 1000m -i {} {} {}".format(aspera_binary, aspera_key, url, raw_data_path))
             #print ';'.join([download_command, rename_read1_command, rename_read2_command])

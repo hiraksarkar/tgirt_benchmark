@@ -1,5 +1,6 @@
 #!/bin/bash
 
+REF=$1
 REF_PATH=${REF}/benchmarking
 TRANSCRIPTOME=$REF_PATH/human_transcriptome
 GENOME_PATH=$REF_PATH/GRCH38_genome
@@ -15,7 +16,7 @@ ERCC_SEQUENCE=https://tools.thermofisher.com/content/sfs/manuals/cms_095047.txt
 GTRNA=http://gtrnadb.ucsc.edu/GtRNAdb2/genomes/eukaryota/Hsapi38/hg38-tRNAs.tar.gz
 
 ### Download genome ref
-#curl $HUMAN_REF_URL > $GENOME_PATH/reference.fa.gz
+curl $HUMAN_REF_URL > $GENOME_PATH/reference.fa.gz
 
 #Download rRNA
 python get_rRNA_fa.py > $TRANSCRIPTOME/rRNA.fa
@@ -44,9 +45,9 @@ zcat $GENOME_PATH/reference.fa.gz \
     | cat - $TRANSCRIPTOME/ercc.fa $TRANSCRIPTOME/rRNA.fa \
 > $GENOME_PATH/reference.fa
 samtools faidx $GENOME_PATH/reference.fa
-#hisat2-build $GENOME_PATH/reference.fa $GENOME_PATH/reference
+/home/hirak/hisat2/hisat2-build $GENOME_PATH/reference.fa $GENOME_PATH/reference
 #bowtie2-build $GENOME_PATH/reference.fa $GENOME_PATH/reference
-hisat2_extract_splice_sites.py $GENOME_PATH/genes.gtf > $GENOME_PATH/splicesite.tsv  
+#/home/hirak/Projects/hisat2/hisat2_extract_splice_sites.py $GENOME_PATH/genes.gtf > $GENOME_PATH/splicesite.tsv  
 echo 'Made genome'
 
 #download gene annotation
@@ -110,7 +111,8 @@ python bed_to_gtf.py $TRANSCRIPTOME/ercc.bed >> $GENES_GTF
 python bed_to_gtf.py $TRANSCRIPTOME/tRNA.bed >> $GENES_GTF
 echo 'Made gtf'
 	
-#for genome count 
+#for genome count
+/home/hirak/Projects/hisat2/hisat2_extract_splice_sites.py $GENOME_PATH/genes.gtf > $GENOME_PATH/splicesite.tsv  
 SAF_FILE=$TRANSCRIPTOME/genes.SAF
 echo 'GeneID\tchr\tstart\tend\tstrand' > $SAF_FILE
 awk '{print $NF,$1,$2,$3,$6}' OFS='\t' $TRANSCRIPTOME/genes.bed >> $SAF_FILE
@@ -130,4 +132,4 @@ python calibrate_gene_set.py $TRANSCRIPTOME
 cat  $TRANSCRIPTOME/tRNA.fa $TRANSCRIPTOME/rRNA.fa \
 	> $TRANSCRIPTOME/tRNA_rRNA.fa
 bowtie2-build $TRANSCRIPTOME/tRNA_rRNA.fa $TRANSCRIPTOME/tRNA_rRNA
-bash make_length.sh
+bash make_length.sh $REF
