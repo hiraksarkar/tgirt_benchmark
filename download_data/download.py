@@ -2,9 +2,12 @@
 
 from collections import defaultdict
 
-raw_data_path = '/stor/scratch/Lambowitz/cdw2854/bench_marking/data'
+#raw_data_path = '/stor/scratch/Lambowitz/cdw2854/bench_marking/data'
+
+raw_data_path = '/mnt/scratch6/hirak/SLA_benchmark/tgirt_experiment/real_data'
 
 sample_dict = defaultdict(int)
+
 with open('SraRunTable.txt','r') as table:
     for i, line in enumerate(table):
         if i!=0:
@@ -17,8 +20,8 @@ with open('SraRunTable.txt','r') as table:
 
             #render commands
             download_command = 'fastq-dump --split-3 --gzip --outdir %s %s ' %(raw_data_path, run_number)
-            rename_read1_command = 'mv %s/%s_1.fastq.gz %s/%s_R1_001.fastq.gz' \
-                    %(raw_data_path,run_number, raw_data_path, sample_id)
-            rename_read2_command = 'mv %s/%s_2.fastq.gz %s/%s_R2_001.fastq.gz' \
-                    %(raw_data_path,run_number, raw_data_path, sample_id)
-            print ';'.join([download_command, rename_read1_command, rename_read2_command])
+            #rename_read1_command = 'mv %s/%s/%s_1.fastq.gz %s/%s_R1_001.fastq.gz' \
+            #        %(raw_data_path,run_number, run_number, raw_data_path, sample_id)
+            rename_read2_command = 'mv %s/%s/%s_2.fastq.gz %s/%s_R2_001.fastq.gz' \
+                    %(raw_data_path,run_number, run_number, raw_data_path, sample_id)
+            print ';'.join([rename_read2_command])
